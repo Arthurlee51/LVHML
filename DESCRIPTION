@@ -1,0 +1,19 @@
+Package: LVHDR
+Type: Package
+Title: A Latent Variable Approach to Learning Discrete-time High-dimensional Recurrent Event Data
+Version: 0.1.0
+Author: Authors@R: c(
+    person("Yunxiao", "Chen", role = "aut"),
+    person("Tony", "Sit", role = "aut"),
+    person("Sze Ming", "Lee", email = "s.lee51@lse.ac.uk", role = c("aut","cre")))
+Maintainer: Sze Ming Lee <s.lee51@lse.ac.uk>
+Description: Estimation and statistical inference for high-dimensional recurrent event data using latent variable Approach.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: Rcpp (>= 1.0.10),
+          truncnorm,
+         expm,
+         glmnet,
+         parallel 
+LinkingTo: Rcpp

@@ -1,4 +1,4 @@
-Package: LVHDR_test
+Package: LVHDR
 Type: Package
 Title: A Latent Variable Approach to Learning Discrete-time High-dimensional Recurrent Event Data
 Version: 0.1.0

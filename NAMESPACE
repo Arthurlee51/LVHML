@@ -1,5 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-importFrom(Rcpp, evalCpp)
-useDynLib(LVHDR, .registration = TRUE)
-import(doParallel)
-import(glmnet)

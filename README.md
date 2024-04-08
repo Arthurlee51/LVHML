@@ -9,7 +9,7 @@ install_github("Arthurlee51/LVHDR")
 ```
 
 ## Usage 
-lvhdr_est(Y, R, X , Kset = 1:10, par = FALSE, n.cores = 1, Asymp = FALSE, Silent = FALSE, Z = array(0, dim = c(0, 0, 0))) 
+lvhdr_est(Y, R, X ) 
 
 
 ## Brief description

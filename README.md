@@ -1,5 +1,5 @@
 # LVHDR
-A Latent Variable Approach to Learning Discrete-time High-dimensional Recurrent Event Data
+A Latent Variable Approach to Learning Discrete-time High-dimensional Recurrent Event Data, as proposed by Lee at al. (2024+).
 
 To install this package in R, run the following commands:  
 
@@ -13,7 +13,7 @@ lvhdr_est(Y, R, X )
 
 
 ## Brief description
-This package implements the estimator proposed in Lee et al(2024+) for Learning Discrete-time High-dimensional Recurrent Event Data using a latent variable approach. For further information about parameters, usage and example code, run the following command after installing the package 
+The LVHDR package implements the estimator developed by Lee et al. (2024+), which analyses Discrete-time High-dimensional Recurrent Event Data via a latent variable framework. The main function lvhdr_est() performs parameter estimation, latent dimension determination, and, optionally, estimation of the asymptotic variance and standard errors of covariates' regression coefficients. For detailed parameter descriptions, usage instructions, and examples, execute the following after installation:
 
 ```R
 ?lvhdr_est

@@ -15,7 +15,6 @@ Imports: Rcpp (>= 1.0.10),
           truncnorm,
          expm,
          glmnet,
-         parallel,
-         doParallel
+         parallel
 LinkingTo: Rcpp
 RoxygenNote: 7.3.1

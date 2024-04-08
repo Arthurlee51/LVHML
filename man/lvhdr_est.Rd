@@ -51,6 +51,7 @@ Main function to implement the proposed estimator. This includes choosing the nu
 }
 \examples{
 # Generate example dataset
+set.seed(123)
 dataset <- lvhdr_ex_data(J = 100, nset = "s", Kstar = 3)
 attach(dataset)
 out <- lvhdr_est(Y, R, X, Kset = 1:10, par = FALSE, n.cores = 1, Asymp = FALSE, Silent = FALSE, Z = array(0, dim = c(0, 0, 0)))

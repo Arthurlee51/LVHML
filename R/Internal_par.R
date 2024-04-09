@@ -57,8 +57,8 @@ lvhdr_est_fit_K <- function(Y, Ymatlog, R, XZ, X, XZmat, indices_R, lengths_R, T
         reit <- 1
         print("Max iteration reached, retrying")
         niter <- 2  # Reset to continue the loop properly
-        Thetait[, , 1] <- matrix(rtruncnorm(N * K, a = -1, b = 1, mean = 0, sd = 1), N, K)
-        Uit[, , 1] <- matrix(rtruncnorm(J * (Tp + K + cov_len), a = -1, b = 1, mean = 0, sd = 1), J, Tp + K + cov_len)
+        Thetait[, , 1] <- matrix(truncnorm::rtruncnorm(N * K, a = -1, b = 1, mean = 0, sd = 1), N, K)
+        Uit[, , 1] <- matrix(truncnorm::rtruncnorm(J * (Tp + K + cov_len), a = -1, b = 1, mean = 0, sd = 1), J, Tp + K + cov_len)
         objstore[1] <- obj.func(t(Uit[, , 1]), as.matrix(Thetait[, , 1]))
       } else {
         print("Max iteration reached, does not converge")

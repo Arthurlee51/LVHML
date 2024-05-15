@@ -1,6 +1,6 @@
-Package: LVHDR
+Package: LVHML
 Type: Package
-Title: A Latent Variable Approach to Learning Discrete-time High-dimensional Recurrent Event Data
+Title: A Latent Variable Approach to Learning High-dimensional Multivariate Longitudinal Data
 Version: 0.1.0
 Author: Authors@R: c(
     person("Yunxiao", "Chen", role = "aut"),

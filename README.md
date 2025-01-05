@@ -1,5 +1,5 @@
 # LVHML
-A Latent Variable Approach to Learning High-dimensional Multivariate longitudinal Data, as proposed by Lee at al. (2024+).
+A Latent Variable Approach to Learning High-dimensional Multivariate longitudinal Data, as proposed by Lee at al. (2025+).
 
 To install this package in R, run the following commands:  
 
@@ -20,4 +20,4 @@ The LVHML package implements the estimator developed by Lee et al. (2024+), whic
 ```
 
 ## Reference 
-Sze Ming Lee, Yunxiao Chen, and Tony Sit. **A Latent Variable Approach to Learning High-dimensional Multivariate longitudinal Data**. 2024+. (manuscript)
+Sze Ming Lee, Yunxiao Chen, and Tony Sit. **Pairwise Comparisons without Stochastic Transitivity: Model, Theory and Applications**. 2025+. (manuscript)

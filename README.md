@@ -5,7 +5,7 @@ To install this package in R, run the following commands after downloading LVHML
 
 ```R
 library(devtools) 
-install.packages("LVHML_0.1.0.tar", repos = NULL, type = "source")
+install.packages("LVHML_0.1.0.tar.gz", repos = NULL, type = "source")
 ```
 
 ## Usage 

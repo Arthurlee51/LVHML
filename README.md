@@ -1,7 +1,7 @@
 # LVHML
 A Latent Variable Approach to Learning High-dimensional Multivariate longitudinal Data, as proposed by Lee at al. (2025+).
 
-To install this package in R, run the following commands after downloading LVHML_0.1.0.tar.gz from the repository:
+To install this package in R, run the following commands:
 
 ```R
 library(devtools)

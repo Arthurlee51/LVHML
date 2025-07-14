@@ -19,6 +19,9 @@ The LVHML package implements the estimator developed by Lee et al. (2025+), whic
 ?lvhml_est
 ```
 
+## Note
+This repository contains the most recent version of the code. The associated manuscript on arXiv does not yet reflect the latest updates. Please refer to this GitHub repository for the most current implementation and information.
+
 ## Reference 
 Sze Ming Lee, Yunxiao Chen, and Tony Sit. **A Latent Variable Approach to Learning
 High-dimensional Multivariate longitudinal Data**. 2025+. (manuscript)

@@ -26,17 +26,17 @@ Thetapar.func(
 )
 }
 \arguments{
-\item{yrjs}{Transposed Y matrix for the ith subject.}
+\item{yrjs}{Transposed Y matrix (Tp x J) for the ith subject.}
 
 \item{Ri}{Missing indicator vector for the ith subject.}
 
 \item{thetai}{Current Theta estimate for the ith subject.}
 
-\item{A}{Current estimate of A.}
+\item{A}{Matrix of Loading parameters (J times K if ext = FALSE and J times Tp*K if ext = TRUE)}
 
-\item{Gamma}{Current estimate of Gamma.}
+\item{Gamma}{(J x Tp) intercept matrix}
 
-\item{Beta}{Current estimate of Beta.}
+\item{Beta}{Current estimate of Beta (J times px if ext = FALSE and J times Tp*px if ext = TRUE).}
 
 \item{i}{Subject index.
 

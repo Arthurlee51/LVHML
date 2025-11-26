@@ -23,11 +23,11 @@ Betaparglm.func(
 )
 }
 \arguments{
-\item{yris}{Transposed Y matrix for the jth event.}
+\item{yris}{Transposed Y (Tp times N) matrix for the jth event.}
 
-\item{gammaj}{Gamma coefficients for the jth event.}
+\item{gammaj}{Vector of gamma coefficients for the jth event.}
 
-\item{aj}{A coefficients for the jth event.}
+\item{aj}{Vector of loading coefficients for the jth event.}
 }
 \value{
 A vector of coefficients estimated by the GLM.

@@ -28,7 +28,7 @@ NULL
 #'         \item{Sigma_E}{Estimated asymptotic variance matrices for sqrt(N)*betahat_j (if Asymp = TRUE)}
 #'         \item{SE}{The standard errors of Betahat (if Asymp = TRUE)}
 #'         \item{AsymVarhatstore}{The estimated variance matrices for sqrt(N)*u_j (if Asymp = TRUE)}
-#'         \item{all_output}{List containing all_output (if full = TRUE)}
+#'         \itme{all_output}{List containing all_output (if full = TRUE)}
 #' @examples
 #' # Generate example dataset
 #' set.seed(123)
@@ -64,7 +64,7 @@ lvhml_est <- function(Y, R, X , Kset = 1:10, par = FALSE, n.cores = 1, Asymp = F
   # Loop through each K value in Kset for estimation
   for (i in seq_along(Kset)) {
     K <- Kset[i]
-    if (!Silent)  print(sprintf("Estimating at K = %d", K))
+    if (!Silent)  print(sprintf("Estimating the model at K = %d", K))
 
     # Compute initial values using SVD-based approach
     init <- SVDinit.func(Y, R, X, Zmat, indices_R, lengths_R, Tp, K, px,pz, N, J, par, n.cores,ext, gamma_fix)
@@ -125,11 +125,11 @@ lvhml_est <- function(Y, R, X , Kset = 1:10, par = FALSE, n.cores = 1, Asymp = F
 #' @param J Number of events or outcome variables.
 #' @param N Number of subjects.
 #' @param px Number of static covariates.
-#' @param tA Transposed loading matrix.
-#' @param Theta Matrix of latent factors.
-#' @param Gamma Matrix of time-dependent intercepts
-#' @param tBeta Transposed regression coefficient matrix of X.
-#' @param X Matrix of static covariates.
+#' @param tA Transposed loading matrix (K times J if ext = FALSE and Tp*K times J if ext = TRUE)
+#' @param Theta (N x K) Matrix of latent factors.
+#' @param Gamma (J x g_len) Matrix of intercepts. g_len = 1 if gamma_fix = TRUE and g_len = Tp otherwise.
+#' @param tBeta Transposed regression coefficient matrix of X (px times J if ext = FALSE and Tp*px times J if ext = TRUE).
+#' @param X (N x px) Matrix of static covariates.
 #' @param ext Logical. Indicates whether the extension allowing time-dependent loadings and coefficients on X is used. Default is FALSE.
 #' @param gamma_fix  Logical. Indicates whether the restriction gamma_{jt} = t gamma_{j} is imposed. Default is FALSE.
 #'

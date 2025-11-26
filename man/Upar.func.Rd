@@ -23,11 +23,11 @@ Upar.func(
 )
 }
 \arguments{
-\item{yris}{Transposed Y matrix for the jth event.}
+\item{yris}{(Tp x N) Transposed Y matrix for the jth event.}
 
 \item{uj}{Current estimates of the jth row of U for the event.}
 
-\item{Theta}{Current estimates Theta.}
+\item{Theta}{(N times K) Current estimates of Theta.}
 }
 \value{
 A vector of updated U parameters for the event.

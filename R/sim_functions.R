@@ -1,10 +1,16 @@
 #Functions used for simulations:
 #Function to calculate Frobenius norm
+#a, b can be array, matrix or vector with same dimension.
 Fnormsum.func = function(a,b){
   return(sqrt(sum((a - b)^2 )))
 }
 
-#Functions to evaluate performance of the estimator.
+#'Functions to evaluate performance of the estimator.
+#' @param Thetahat,Uhat,Thetastar,Ustar,X,Z,N,J,Tp,px,pz,K,ext,
+#' gamma_fix
+#'  See \code{\link{lvhml_est}} and
+#' \code{\link{lvhml_ex_data}} for the meaning and dimensions of
+#' these quantities.
 eval.func =function(Thetahat,Uhat,Thetastar,Ustar,X,Z,N,J,Tp,px,pz,K, ext, gamma_fix)
 {
   #Precompute
@@ -87,8 +93,9 @@ eval.func =function(Thetahat,Uhat,Thetastar,Ustar,X,Z,N,J,Tp,px,pz,K, ext, gamma
   return(list(Ulossstore = Ulossstore,Totalloss = Totalloss,Totallossstore=Totallossstore,  Uloss = Uloss, Thetaloss = Thetaloss ))
 }
 
-
-#Function to compute confidence interval based on parameters estimate and data:
+#'Function to compute confidence interval based on parameters estimate and data:
+#' @param X,Z,Thetahat,Uhat,R,J,N,Tp,ext,gamma_fix
+#'   See \code{\link{lvhml_est}}.
 calCI_uj.func = function(X,Z, Thetahat, Uhat,R,J,N,Tp,ext, gamma_fix){
   ujlen= ncol(Uhat)
   #Recover Ehat from ujlen, R, Thetahat, Z.
@@ -131,7 +138,10 @@ calCI_uj.func = function(X,Z, Thetahat, Uhat,R,J,N,Tp,ext, gamma_fix){
 }
 
 
-#Function to compute confidence interval for theta_i based on paramters estimate and data:
+#'Function to compute confidence interval for theta_i based on paramters estimate and data:
+#' @param X,Z,Thetahat,Uhat,Ahat,R,J,N,Tp,ext,gamma_fix
+#'   See \code{\link{lvhml_est}} for the meaning and dimensions of
+#'   these arguments.
 calCI_thi.func = function(X,Z, Thetahat,Uhat, Ahat,R,J,N,Tp,ext, gamma_fix){
   K <- ncol(Thetahat)
   px = ncol(X)
@@ -170,8 +180,11 @@ calCI_thi.func = function(X,Z, Thetahat,Uhat, Ahat,R,J,N,Tp,ext, gamma_fix){
 }
 
 
-
-#Compute Psi_i
+#' Compute Psi_i matrix for a single subject
+#' @param AAhatstore Numeric array of dimension (K x K x J x Tp) storing transformed loading products.
+#' @param ri Vector of length Tp containing the missing indicator of the ith subject.
+#' See \code{\link{lvhml_est}} for the meaning and dimensions of remaining arguments.
+#' @return The computed Psi_i matrix.
 calPsi_i.func <- function(AAhatstore, Uthihat, ri, N, J, Tp, K) {
   rhoipp <- -exp(Uthihat) / (1 + exp(Uthihat))^2
   Evarrhoipp <- matrix(0, nrow = J, ncol = Tp)
@@ -191,8 +204,9 @@ calPsi_i.func <- function(AAhatstore, Uthihat, ri, N, J, Tp, K) {
   return(Psi_i)
 }
 
-
-#Functions to run glm beta. Serve comparison in simulation only. Corresponds to LR in manuscript.
+#'Functions to run glm beta. Serve comparison in simulation only. Corresponds to LR in manuscript.
+#' @param Y, R, X , Tp, par, n.cores, ext, gamma_fix S
+#' See \code{\link{lvhml_est}} for the meaning and dimensions of these arguments.
 estglmbeta.func = function(Y, R, X = matrix(0, nrow = 0, ncol = 0), Tp, par = 0, n.cores = 1, ext, gamma_fix){
   # Get dimensions of input matrices
   px = ncol(X)
@@ -215,8 +229,9 @@ estglmbeta.func = function(Y, R, X = matrix(0, nrow = 0, ncol = 0), Tp, par = 0,
   return(Uhat)
 }
 
-#Function to run glm function to get estimate of beta.
-#yris = t(Y[,j,])
+#'Function to run glm function to get estimate of beta.
+#'@param yris (Tp x N) Matrix containing outcomes from Y associated with the jth event.
+#' See \code{\link{lvhml_est}} for the meaning and dimensions of remaining arguments.
 Betaonlyparglm.func = function(yris,indices_R,lengths_R,X,N,px,K,Tp, ext, gamma_fix){
   yj = yris[!is.na(yris)]
 
@@ -230,7 +245,8 @@ Betaonlyparglm.func = function(yris,indices_R,lengths_R,X,N,px,K,Tp, ext, gamma_
 }
 
 
-#Functions to run glmm(Generalised linear mixed models. In particular, logistic regression with random intercepts.) Corresponds to LRRI in manuscript
+#'Functions to run glmm(Generalised linear mixed models. In particular, logistic regression with random intercepts.) Corresponds to LRRI in manuscript
+#'#' See \code{\link{lvhml_est}} for the meaning and dimensions of arguments.
 estglmm.func = function(Y, R, X = matrix(0, nrow = 0, ncol = 0), Tp, par = 0, n.cores = 1,ext, gamma_fix){
   # Get dimensions of input matrices
   px = ncol(X)
@@ -250,8 +266,9 @@ estglmm.func = function(Y, R, X = matrix(0, nrow = 0, ncol = 0), Tp, par = 0, n.
   return(Uhat)
 }
 
-#Function to run glmm for each given j
-#yris = t(Y[,j,])
+#'Function to run glmm for each given j
+#'@param yris (Tp x N) Matrix containing outcomes from Y associated with the jth event.
+#' See \code{\link{lvhml_est}} for the meaning and dimensions of remaining arguments.
 parglmm.func = function(yris,indices_R,lengths_R,XZmat,N,P,K,Tp,ext, gamma_fix){
   yj = yris[!is.na(yris)]
 

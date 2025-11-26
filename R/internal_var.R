@@ -4,8 +4,8 @@
 #'
 #' Computes the Phi_j matrix for the calculation of asymptotic variance, based on EEstarstore and ujE values.
 #'
-#' @param EEstarstore A 4 dimensional array storing pre-computed values of e_{ir}e_{ir}^{t} for all i and r.
-#' @param ujE uj times e_{ir} values for a specific j.
+#' @param EEstarstore A 4 dimensional array (ujlen x ujlen x N x Tp) storing pre-computed values of e_{ir}e_{ir}^{t} for all i and r.
+#' @param ujE (N x Tp) matrix of uj times e_{ir} values for a specific j.
 #' @param ujlen Length of the uj.
 #'
 #'@seealso \code{lvhml_est_fit_K} for the description of other parameters.
@@ -53,7 +53,7 @@ calasympvar.func <- function(X, Z, Thetahat, Uhat, R, J, N, Tp, ext,gamma_fix) {
   UERhat <- UER.func(Uhat, Thetahat, X,Z, Tp, px,pz, J, N,ext,gamma_fix)
 
   Ehat <- compute_Ehat( Thetahat, X, Z,  ujlen,K,Tp, px,pz, N,ext, gamma_fix)
-  
+
   EEhatstore <- calEEstore.func(Ehat, ujlen, N, Tp)
 
   AsymVarhatstore <- array(0, dim = c(ujlen, ujlen, J))
@@ -70,6 +70,7 @@ calasympvar.func <- function(X, Z, Thetahat, Uhat, R, J, N, Tp, ext,gamma_fix) {
 #-------------------------------------------------------------------------------------------------------------
 #Simple supporting functions related to the computation of asymptotic variance
 #Return a array that gives e_{it} u_{j}^{top} for every i, j and t.
+#'@seealso \code{lvhml_est_fit_K} and \code{Uest.func} for the description of parameters.
 #'@keywords internal
 UER.func = function(U, Theta, X, Z,Tp,px,pz,J,N,ext,gamma_fix){
   out <- array(0, dim = c(N,J,Tp))
@@ -77,14 +78,14 @@ UER.func = function(U, Theta, X, Z,Tp,px,pz,J,N,ext,gamma_fix){
   K <- ncol(Theta)
   g_len <- if (gamma_fix) 1 else Tp
   b_len <- if (px > 0) if (ext) px * Tp else px else 0
-  
+
   for ( t in 1:Tp){
     if(!gamma_fix){
       out[,,t]<- IN%*%t(U[,t])
     }else{
       out[,,t]<- t*IN%*%t(U[,1])
     }
-    
+
     if(px>0){
       if(!ext){
         out[,,t] <- out[,,t] + X%*%t(U[,(g_len+1):(g_len+px)])
@@ -92,22 +93,24 @@ UER.func = function(U, Theta, X, Z,Tp,px,pz,J,N,ext,gamma_fix){
         out[,,t] <- out[,,t] + X%*%t(U[,(g_len+(t-1)*px+1 ):(g_len+t*px)])
       }
     }
-    
+
     if(pz>0){
       out[,,t] <- out[,,t] + Z[,,t]%*%t(U[,(g_len+b_len+1):(g_len+b_len+pz)])
     }
-    
+
     if(!ext){
       out[,,t] <- out[,,t] + Theta%*%t(U[,(g_len+b_len+pz+1):ncol(U)])
     }else{
       out[,,t] <- out[,,t] + Theta%*%t(U[,(g_len+b_len+pz+(t-1)*K+1):(g_len+b_len+pz+t*K)])
     }
   }
-  
+
   return(out)
 }
 
-#Function to calculate e_{ir}e_{ir}^{\top} for all combinations of i and r.
+#'Function to calculate e_{ir}e_{ir}^{\top} for all combinations of i and r.
+#' @param E Numeric array of dimension (N x ujlen x Tp) containing time-adjusted intercepts, covariates and factors.
+#' @param ujlen Length of \code{u_j}.
 calEEstore.func = function(E, ujlen, N,Tp){
   EEstore = array(0,dim = c(ujlen, ujlen,N,Tp))
   for ( i in 1:N){
@@ -119,10 +122,12 @@ calEEstore.func = function(E, ujlen, N,Tp){
 }
 
 
-#Function to compute Ehat
+#'Function to compute Ehat
+#' @param Thetahat,X,Z,ujlen,K,Tp,px,pz,N,ext,gamma_fix
+#'   See \code{\link{lvhml_est_fit_K}}.
 compute_Ehat <- function( Thetahat, X, Z,  ujlen,K,Tp, px,pz, N,ext, gamma_fix) {
   Ehat<-array(0,dim=c(N,ujlen,Tp))
-  
+
   for ( t in 1:Tp){
     #Compute Ehat based on t.i.e. e_{it}
     if(!gamma_fix){
@@ -131,7 +136,7 @@ compute_Ehat <- function( Thetahat, X, Z,  ujlen,K,Tp, px,pz, N,ext, gamma_fix) 
     }else{
       Dprep <- matrix(t, nrow=N,ncol=1)
     }
-    
+
     tobind <- Dprep
     if(px>0){
       if(!ext){
@@ -142,11 +147,11 @@ compute_Ehat <- function( Thetahat, X, Z,  ujlen,K,Tp, px,pz, N,ext, gamma_fix) 
         tobind <- cbind(tobind , DXprep)
       }
     }
-    
+
     if(pz>0){
       tobind <- cbind(tobind ,Z[,,t])
     }
-    
+
     if(!ext){
       Ehat[,,t]<- cbind(tobind, Thetahat)
     }else{

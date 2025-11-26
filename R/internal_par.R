@@ -6,9 +6,9 @@
 #' to be used internally within the package and supports parallel computing, handling
 #' of time-dependent covariates, and convergence checking.
 #'
-#' @param Ymatlog Logical matrix derived from Y to reduce memory usage.
-#' @param Zmat Matrix form time-dependent covariates Z.
-#' @param indices_R Indices of observed entries in R.
+#' @param Ymatlog Logical matrix (N x (J*Tp)) derived from Y.
+#' @param Zmat Numeric matrix (pz x (N*Tp)) derived from time-dependent covariates Z.
+#' @param indices_R Vector of indices of observed entries in R.
 #' @param lengths_R Number of observed time points for each subject.
 #' @param Tp Number of time points.
 #' @param K Number of factors to estimate.
@@ -17,8 +17,8 @@
 #' @param u_len Length. of the parameter u_j.
 #' @param N Number of subjects.
 #' @param J Number of events.
-#' @param Tinit Initial values for Theta.
-#' @param Uinit Initial values for U (Gamma,Beta, V, A).
+#' @param Tinit Matrix (N times K) of initial values for Theta.
+#' @param Uinit Matrix (J times u_len) of initial values for U =(Gamma,Beta, V, A).
 #' @seealso \code{\link{lvhml_est}} for the description of \code{Y}, \code{R}, \code{X}, \code{par}, \code{n.cores}, \code{Silent}, \code{ext}, \code{gamma_fix} and \code{proj_const}.
 #' @keywords internal
 #'
@@ -56,6 +56,9 @@ lvhml_est_fit_K <- function(Y, Ymatlog, R,  X, Zmat, indices_R, lengths_R, Tp, K
   #Count total number of projections during estimation.
   # Iteration loop
   while (niter == 1 || Improvementsobj[niter - 1] > tol) {
+    # if (!Silent) {
+    #   print(niter)
+    # }
     niter <- niter + 1
 
     # Max iteration check
@@ -124,8 +127,22 @@ lvhml_est_fit_K <- function(Y, Ymatlog, R,  X, Zmat, indices_R, lengths_R, Tp, K
 }
 
 
-# Helper: Run SVD on a matrix and select components above threshold
-# Return tildelijts: reconstructed matrix using top components
+#' SVD-based low-rank reconstruction of the transformed responses
+#'
+#' @description Internal helper used in the SVD initialisation step
+#'   to obtain a low–rank approximation of the transformed response
+#'   matrix.
+#'
+#' @param mat Numeric matrix (N times M_nrow) containing the transformed responses (stacked over time
+#'   if \code{ext = TRUE}).
+#' @param N Number of subjects.
+#' @param K Latent dimension.
+#' @param M_nrow Number of columns of \code{mat} (Typically \code{J} if ext is FALSE and \code{J * Tp} otherwise).
+#' @param threshold Thresold to be compared with singular values.
+#'
+#' @return Numeric matrix of the same dimension as \code{mat} containing the low–rank reconstruction.
+#'
+#' @keywords internal
 run_svd <- function(mat, N, K,M_nrow, threshold) {
   svdresult <- svd(mat, nu = M_nrow, nv = M_nrow)
   tildeK <- max(K + 1, which(svdresult$d > threshold))
@@ -135,8 +152,19 @@ run_svd <- function(mat, N, K,M_nrow, threshold) {
 }
 
 
-#' Helper: compute intermediate M-matrix from reconstructed data
-#Return M matrix after taking invxi.
+#' Compute intermediate M-matrix from truncated transformed values
+#'
+#' @description Internal helper that applies the inverse link
+#'   function to truncated transformed responses to build the
+#'   intermediate M–matrix.
+#'
+#' @param tildelijts Numeric matrix with the same dimension as the
+#'   transformed response matrix from \code{\link{run_svd}}
+#' @param epsilon Truncation constant.
+#'
+#' @return Numeric matrix \code{M} with the same dimensions as \code{tildelijts}.
+#'
+#' @keywords internal
 compute_M <- function(tildelijts, epsilon) {
   # Compute intermediate M matrix based on tildelijts
   M <- matrix(0, nrow = nrow(tildelijts), ncol = ncol(tildelijts))
@@ -147,14 +175,22 @@ compute_M <- function(tildelijts, epsilon) {
   return(M)
 }
 #----------------------------------------------------------------------------------------------------------------
-#' Compute Initial Values Using SVD-based Algorithm
+#' Construct SVD-based initial values for U and Theta
 #'
-#' This function calculates initial values for parameters using a Singular Value Decomposition (SVD)-based algorithm.
-#' It's intended for internal use and supports parallel computing for efficient operation.
+#' @description Internal initialisation routine called by
+#'   \code{\link{lvhml_est_fit_K}} prior to the main optimisation.
 #'
-#'@seealso \code{lvhml_est_fit_K} for the description of parameters.
+#' @seealso \code{lvhml_est_fit_K} for the description of parameters.
+#'
+#' @return A list with two components:
+#'   \itemize{
+#'     \item \code{Uinit}: \code{J x u_len} matrix of initial values
+#'           for the event–specific parameter blocks.
+#'     \item \code{Tinit}: \code{N x K} matrix of initial values for
+#'           the subject–specific scores.
+#'   }
+#'
 #' @keywords internal
-#'
 #' @return A list containing initial values for U (Gamma,Beta, V, A) and T (Theta).
 SVDinit.func <- function(Y, R, X, Zmat, indices_R, lengths_R, Tp, K, px,pz, N, J, par, n.cores, ext,gamma_fix) {
   epsilon <- 0.01  # Constant used for bounding values
@@ -289,14 +325,28 @@ SVDinit.func <- function(Y, R, X, Zmat, indices_R, lengths_R, Tp, K, px,pz, N, J
   return(list(Uinit = Uinit, Tinit = Tinit))
 }
 #----------------------------------------------------------------------------------------------------------------
-#' Beta Estimation for Initial Values
+#' Estimate Beta (and V) via GLM for all events
 #'
-#' This function estimates the initial values for Beta (and V) using Generalized Linear Models (GLMs).
-#' It supports parallel processing and is designed for internal package use.
-#'@seealso \code{lvhml_est_fit_K} for the description of parameters.
+#' @description
+#' Internal helper that calls \code{Betaparglm.func} for each event to obtain
+#' GLM estimates of the regression parameters, given current values of
+#' \code{Gamma}, \code{A} and \code{Theta}.
+#'
+
+#' @param Gamma (J x g_len) intercept matrix, where g_len depends on gamma_fix
+#' @param A Matrix of Loading parameters (J times K if ext = FALSE and J times Tp*K if ext = TRUE)
+#' @param Theta Matrix (N times K) of latent factors.
+#' #' @param Y,R,X,Zmat,indices_R,lengths_R,Tp,K,px,pz,N,J,par,n.cores,ext,gamma_fix
+#'   See \code{\link{lvhml_est_fit_K}} for the meaning and dimensions of these
+#'   arguments.
+#'
+#' @return
+#' A numeric matrix of dimension \code{b_len x J} containing the estimated
+#' regression coefficients for each event, where \code{b_len} depends on
+#' \code{px}, \code{pz} and \code{ext}.
+#'
+#' @seealso \code{\link{Betaparglm.func}} for the per-event GLM update.
 #' @keywords internal
-#'
-#' @return A matrix containing the estimated Beta coefficients for each event.
 Betaestglm.func <- function(Y, R, Gamma, A, Theta, X, Zmat, indices_R, lengths_R, Tp, K, px,pz, N, J, par, n.cores, ext, gamma_fix) {
   if (par) {
     out <- parallel::mcmapply(
@@ -316,9 +366,9 @@ Betaestglm.func <- function(Y, R, Gamma, A, Theta, X, Zmat, indices_R, lengths_R
 #' This internal function performs the estimation of Beta parameters for a single event using GLM.
 #' It's utilized by \code{Betaestglm.func} for either sequential or parallel processing.
 #'
-#' @param yris Transposed Y matrix for the jth event.
-#' @param gammaj Gamma coefficients for the jth event.
-#' @param aj A coefficients for the jth event.
+#' @param yris Transposed Y (Tp times N) matrix for the jth event.
+#' @param gammaj Vector of gamma coefficients for the jth event.
+#' @param aj Vector of loading coefficients for the jth event.
 #' @seealso \code{lvhml_est_fit_K} for the description of other parameters.
 #'
 #' @keywords internal
@@ -360,8 +410,9 @@ Betaparglm.func <- function(yris, indices_R, lengths_R, gammaj, aj, Theta, X, Zm
 #' This function updates the values of U based on the current estimates.
 #' It supports parallel processing for efficiency.
 #'
-#' @param U Current estimates of Gamma, A, and Beta parameters.
-#' @param Theta Current estimates Theta.
+#' @param U Current (J x u_len) matrix of event-specific parameters,
+#'   where each row contains the stacked vector \code{(Gamma_j, Beta_j, V_j, A_j)}.
+#' @param Theta Current (N x K) matrix of latent factors.
 #' @seealso \code{lvhml_est_fit_K} for the description of other parameters.
 #'
 #' @keywords internal
@@ -390,9 +441,9 @@ Uest.func <- function(Y, R, U, Theta, X, Zmat, indices_R, lengths_R, Tp, K, px,p
 #' Performs the update of U parameters for a single event. It calculates gradients and
 #' Hessians to find the optimal update direction and magnitude for U parameters.
 #'
-#' @param yris Transposed Y matrix for the jth event.
+#' @param yris (Tp x N) Transposed Y matrix for the jth event.
 #' @param uj Current estimates of the jth row of U for the event.
-#' @param Theta Current estimates Theta.
+#' @param Theta (N times K) Current estimates of Theta.
 #'
 #'@seealso \code{lvhml_est_fit_K} for the description of other parameters.
 #'
@@ -428,8 +479,9 @@ Upar.func <- function(yris, indices_R, lengths_R, uj, Theta, X, Zmat, N, px,pz, 
 #' This function updates the Theta parameters based on the current estimates of U, Theta, and other model parameters.
 #' It supports parallel processing for efficient computation.
 #'
-#' @param U Current estimates of Gamma, A, and Beta parameters.
-#' @param Theta Current estimates Theta.
+#' @param U Current (J x u_len) matrix of event-specific parameters,
+#'   where each row contains the stacked vector \code{(Gamma_j, Beta_j, V_j, A_j)}.
+#' @param Theta Current (N x K) matrix of latent factors.
 #'
 #'@seealso \code{lvhml_est_fit_K} for the description of other parameters.
 #'
@@ -458,12 +510,12 @@ Thetaest.func = function(Y,R,Theta,U,X, Z,Tp,K,px,pz,N,J,par,n.cores, ext, gamma
 #'
 #' Computes the update for Theta parameters for a single subject using current model estimates.
 #'
-#' @param yrjs Transposed Y matrix for the ith subject.
+#' @param yrjs Transposed Y matrix (Tp x J) for the ith subject.
 #' @param Ri Missing indicator vector for the ith subject.
 #' @param thetai Current Theta estimate for the ith subject.
-#' @param A Current estimate of A.
-#' @param Gamma Current estimate of Gamma.
-#' @param Beta Current estimate of Beta.
+#' @param Gamma (J x Tp) intercept matrix
+#' @param A Matrix of Loading parameters (J times K if ext = FALSE and J times Tp*K if ext = TRUE)
+#' @param Beta Current estimate of Beta (J times px if ext = FALSE and J times Tp*px if ext = TRUE).
 #' @param i Subject index.
 #'
 #'#'@seealso \code{lvhml_est_fit_K} for the description of other parameters.
@@ -536,8 +588,10 @@ Thetapar.func = function(yrjs, Ri,thetai,A,Gamma,Beta,V,X,Z,K,Tp,px,pz,i, J, ext
 }
 
 #-----------------------------------------------------------------------------------------------------------------
-#Function to get Zmat
+#'Function to get Zmat
 #'@keywords internal
+#'@param Z  (N x pz x Tp) Array of time-dependent covariates.
+#'@seealso \code{lvhml_est_fit_K} for the description of other parameters.
 GetZmat.func = function(Z,pz,N,Tp){
   if(pz>0){
     # Initialize an empty matrix with dimensions p * (N*Tp), such that XZmat[, ((i-1)*Tp+1):(i*Tp)] refers to the p \times Tp matrix for the ith individual
@@ -553,6 +607,7 @@ GetZmat.func = function(Z,pz,N,Tp){
 }
 
 #Function to create Ymat
+#'@seealso \code{lvhml_est_fit_K} for the description of parameters.
 #'@keywords internal
 GetYmat.func = function(Y,N,J,Tp){
   Ymat <- matrix(nrow = N, ncol = J * Tp)
@@ -565,7 +620,19 @@ GetYmat.func = function(Y,N,J,Tp){
 
 
 #Function to get descend direction from Hessian matrix and gradient
-#'@keywords internal
+#' Compute Newton search direction with regularised Hessian
+#'
+#' @description Internal helper that computes the search direction.
+#'
+#' @param Hes (par_len x par_len) Hessian matrix.
+#' @param grad Numeric vector of length par_len containing the
+#'   gradient.
+#' @param par_len Integer; length of the parameter vector.
+#'
+#' @return Numeric vector of length \code{par_len} giving the search
+#'   direction.
+#'
+#' @keywords internal
 get_drt.func = function(Hes,grad,par_len){
   drt = NULL
 
@@ -588,7 +655,7 @@ get_drt.func = function(Hes,grad,par_len){
   return(drt)
 }
 
-#inverse function of the logistic function
+#inverse function of the logistic function. p can be scalar, vector or matrix.
 #'@keywords internal
 invxi.func = function(p){
   out = log(p/(1-p))
@@ -597,14 +664,15 @@ invxi.func = function(p){
 
 
 #This script contains the function to generate data for simulation
-#Function to combine Gamma,Beta, A to form U
+#Function to combine Gamma,Beta, A to form U. Gamma, Beta and A should all have J rows.
 #'@keywords internal
 GetU.func = function(Gamma,Beta,V,A){
     return(cbind(Gamma,Beta,V,A))
 }
 
 
-#Function to separate U and get back Gamma, Beta, V and A.
+#Function to separate U and get back Gamma, Beta, V and A. U should have J rows.
+#'@keywords internal
 Sep_U.func = function(U, Tp, px, pz,K, ext, gamma_fix){
   J <- nrow(U)
   g_len <- if(gamma_fix) 1 else Tp
@@ -632,7 +700,7 @@ return(list("Gamma" = Gamma, "Beta" = Beta, "V" = V, "A" =A))
 }
 
 
-#logit function
+#logit function. x can be scalar, vector or matrix.
 #'@keywords internal
 xi.func = function(x){
   expx = exp(x)

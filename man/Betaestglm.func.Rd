@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal_par.R
 \name{Betaestglm.func}
 \alias{Betaestglm.func}
-\title{Beta Estimation for Initial Values}
+\title{Estimate Beta (and V) via GLM for all events}
 \usage{
 Betaestglm.func(
   Y,
@@ -26,14 +26,27 @@ Betaestglm.func(
   gamma_fix
 )
 }
+\arguments{
+\item{Gamma}{(J x g_len) intercept matrix, where g_len depends on gamma_fix}
+
+\item{A}{Matrix of Loading parameters (J times K if ext = FALSE and J times Tp*K if ext = TRUE)}
+
+\item{Theta}{Matrix (N times K) of latent factors.
+#' @param Y,R,X,Zmat,indices_R,lengths_R,Tp,K,px,pz,N,J,par,n.cores,ext,gamma_fix
+  See \code{\link{lvhml_est_fit_K}} for the meaning and dimensions of these
+  arguments.}
+}
 \value{
-A matrix containing the estimated Beta coefficients for each event.
+A numeric matrix of dimension \code{b_len x J} containing the estimated
+regression coefficients for each event, where \code{b_len} depends on
+\code{px}, \code{pz} and \code{ext}.
 }
 \description{
-This function estimates the initial values for Beta (and V) using Generalized Linear Models (GLMs).
-It supports parallel processing and is designed for internal package use.
+Internal helper that calls \code{Betaparglm.func} for each event to obtain
+GLM estimates of the regression parameters, given current values of
+\code{Gamma}, \code{A} and \code{Theta}.
 }
 \seealso{
-\code{lvhml_est_fit_K} for the description of parameters.
+\code{\link{Betaparglm.func}} for the per-event GLM update.
 }
 \keyword{internal}

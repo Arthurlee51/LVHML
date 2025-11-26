@@ -7,9 +7,9 @@
 calPhi_j.func(EEstarstore, ujE, R, N, J, Tp, ujlen)
 }
 \arguments{
-\item{EEstarstore}{A 4 dimensional array storing pre-computed values of e_{ir}e_{ir}^{t} for all i and r.}
+\item{EEstarstore}{A 4 dimensional array (ujlen x ujlen x N x Tp) storing pre-computed values of e_{ir}e_{ir}^{t} for all i and r.}
 
-\item{ujE}{uj times e_{ir} values for a specific j.}
+\item{ujE}{(N x Tp) matrix of uj times e_{ir} values for a specific j.}
 
 \item{ujlen}{Length of the uj.}
 }

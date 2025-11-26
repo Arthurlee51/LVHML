@@ -2,10 +2,22 @@
 % Please edit documentation in R/internal_par.R
 \name{compute_M}
 \alias{compute_M}
-\title{Helper: compute intermediate M-matrix from reconstructed data}
+\title{Compute intermediate M-matrix from truncated transformed values}
 \usage{
 compute_M(tildelijts, epsilon)
 }
-\description{
-Helper: compute intermediate M-matrix from reconstructed data
+\arguments{
+\item{tildelijts}{Numeric matrix with the same dimension as the
+transformed response matrix from \code{\link{run_svd}}}
+
+\item{epsilon}{Truncation constant.}
 }
+\value{
+Numeric matrix \code{M} with the same dimensions as \code{tildelijts}.
+}
+\description{
+Internal helper that applies the inverse link
+  function to truncated transformed responses to build the
+  intermediate M–matrix.
+}
+\keyword{internal}

@@ -30,11 +30,11 @@ lvhml_est_fit_K(
 )
 }
 \arguments{
-\item{Ymatlog}{Logical matrix derived from Y to reduce memory usage.}
+\item{Ymatlog}{Logical matrix (N x (J*Tp)) derived from Y.}
 
-\item{Zmat}{Matrix form time-dependent covariates Z.}
+\item{Zmat}{Numeric matrix (pz x (N*Tp)) derived from time-dependent covariates Z.}
 
-\item{indices_R}{Indices of observed entries in R.}
+\item{indices_R}{Vector of indices of observed entries in R.}
 
 \item{lengths_R}{Number of observed time points for each subject.}
 
@@ -52,9 +52,9 @@ lvhml_est_fit_K(
 
 \item{J}{Number of events.}
 
-\item{Tinit}{Initial values for Theta.}
+\item{Tinit}{Matrix (N times K) of initial values for Theta.}
 
-\item{Uinit}{Initial values for U (Gamma,Beta, V, A).}
+\item{Uinit}{Matrix (J times u_len) of initial values for U =(Gamma,Beta, V, A).}
 }
 \value{
 A list including:

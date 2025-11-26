@@ -58,7 +58,7 @@ A list containing the results of the estimation, including:
         \item{Sigma_E}{Estimated asymptotic variance matrices for sqrt(N)*betahat_j (if Asymp = TRUE)}
         \item{SE}{The standard errors of Betahat (if Asymp = TRUE)}
         \item{AsymVarhatstore}{The estimated variance matrices for sqrt(N)*u_j (if Asymp = TRUE)}
-        \item{all_output}{List containing all_output (if full = TRUE)}
+        \itme{all_output}{List containing all_output (if full = TRUE)}
 }
 \description{
 Main function to implement the proposed estimator in a binary setting, as in simulation and data analysis. This includes choosing the number of factors (K) and calculating asymptotic variances if required. The function is capable of handling time-dependent covariates.

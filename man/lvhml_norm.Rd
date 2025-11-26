@@ -25,15 +25,15 @@ lvhml_norm(
 
 \item{px}{Number of static covariates.}
 
-\item{tA}{Transposed loading matrix.}
+\item{tA}{Transposed loading matrix (K times J if ext = FALSE and Tp*K times J if ext = TRUE)}
 
-\item{Theta}{Matrix of latent factors.}
+\item{Theta}{(N x K) Matrix of latent factors.}
 
-\item{Gamma}{Matrix of time-dependent intercepts}
+\item{Gamma}{(J x g_len) Matrix of intercepts. g_len = 1 if gamma_fix = TRUE and g_len = Tp otherwise.}
 
-\item{tBeta}{Transposed regression coefficient matrix of X.}
+\item{tBeta}{Transposed regression coefficient matrix of X (px times J if ext = FALSE and Tp*px times J if ext = TRUE).}
 
-\item{X}{Matrix of static covariates.}
+\item{X}{(N x px) Matrix of static covariates.}
 
 \item{ext}{Logical. Indicates whether the extension allowing time-dependent loadings and coefficients on X is used. Default is FALSE.}
 

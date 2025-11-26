@@ -29,9 +29,25 @@ lvhml_ex_data <- function(J=100,nset="s", Kstar =3, ext = FALSE, gamma_fix = FAL
 
 #---------------------------------------------------------------------------------------------------------------
 #Supporting internal functions:
+#' Generate true parameter values for the example data
+#'
+#' @description Internal helper used by \code{\link{lvhml_ex_data}}
+#'   to generate the true parameter matrices/vectors for a given
+#'   simulation setting.
+#'
+#' @param Kstar Integer; true number of latent factors.
+#' @param N Number of subjects.
+#' @param Number of event types.
+#' @param Tp Number of time points.
+#' @param withZ Logical; If TRUE, include time–dependent covariates. Default is FALSE.
+#' @param ext,gamma_fix,gap Logical flags with the same meaning as in
+#'   \code{\link{lvhml_ex_data}}.
+#'
+#' @return A list including the success probabilities array \code{Lambda} of dimension N x J x TP, 
+#' the true parameters Ustar, Thetastar, covariates (X and Z) and dimensions (Tp, px,pz,N).
+#'
+#' @seealso \code{\link{lvhml_ex_data}} for how these outputs are used.
 #' @keywords internal
-#Function to generate parameters. 
-#withZ: Logical. Indicates whether the time-dependent covariate Z_t is included. Default is FALSE.
 genpar.func <- function(Kstar,N,J,Tp, withZ = FALSE, ext = FALSE, gamma_fix = FALSE,  gap = FALSE){
   #Generate Gamma, tranpose of A(tA),Theta, X and Beta. 
   g_len <- if(gamma_fix) 1 else Tp
@@ -138,9 +154,26 @@ genpar.func <- function(Kstar,N,J,Tp, withZ = FALSE, ext = FALSE, gamma_fix = FA
 }
 
 
-#Function to generate data according to the parameters.
+#' Generate observed data given model probabilities
+#'
+#' @description Internal helper used by \code{\link{lvhml_ex_data}}
+#'   to simulate binary responses and missingness indicators from the
+#'   model probabilities.
+#'
+#' @param Lambda Numeric array of dimension N x J x Tp
+#'   containing success probabilities for all subjects, events and time points.
+#' @param Kstar True number of latent factors 
+#' @param N Number of subjects.
+#' @param J Number of events/items.
+#' @param Tp Number of time points.
+#'
+#' @return A list with two components:
+#'   \itemize{
+#'     \item Y: N x J x Tp  array of binary responses NA for unobserved entries.
+#'     \item R: N x Tp matrix of missingness indicators (1 for observed, 0 for missing).
+#'   }
+#'
 #' @keywords internal
-# Function to generate data
 gendata.func <- function(Lambda ,Kstar,N, J, Tp) {
   # Initialize an array to store y_{rij} values
   Y = array(NA, dim = c(N, J, Tp))

@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal_par.R
 \name{SVDinit.func}
 \alias{SVDinit.func}
-\title{Compute Initial Values Using SVD-based Algorithm}
+\title{Construct SVD-based initial values for U and Theta}
 \usage{
 SVDinit.func(
   Y,
@@ -24,11 +24,19 @@ SVDinit.func(
 )
 }
 \value{
+A list with two components:
+  \itemize{
+    \item \code{Uinit}: \code{J x u_len} matrix of initial values
+          for the event–specific parameter blocks.
+    \item \code{Tinit}: \code{N x K} matrix of initial values for
+          the subject–specific scores.
+  }
+
 A list containing initial values for U (Gamma,Beta, V, A) and T (Theta).
 }
 \description{
-This function calculates initial values for parameters using a Singular Value Decomposition (SVD)-based algorithm.
-It's intended for internal use and supports parallel computing for efficient operation.
+Internal initialisation routine called by
+  \code{\link{lvhml_est_fit_K}} prior to the main optimisation.
 }
 \seealso{
 \code{lvhml_est_fit_K} for the description of parameters.

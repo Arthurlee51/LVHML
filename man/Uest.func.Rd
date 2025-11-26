@@ -27,9 +27,10 @@ Uest.func(
 )
 }
 \arguments{
-\item{U}{Current estimates of Gamma, A, and Beta parameters.}
+\item{U}{Current (J x u_len) matrix of event-specific parameters,
+where each row contains the stacked vector \code{(Gamma_j, Beta_j, V_j, A_j)}.}
 
-\item{Theta}{Current estimates Theta.}
+\item{Theta}{Current (N x K) matrix of latent factors.}
 }
 \value{
 A matrix containing the updated value of U.

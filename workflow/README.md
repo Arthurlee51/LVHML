@@ -52,6 +52,6 @@ Follow these steps to generate the tables:
   - Run `Recommendation_performance.R` on the `.RData` files from these runs for different number of recommendations (10,20,30 and 40). The relevant output is stored in **Sen_result**.
 
 - **Table S9**  
-  - Results are automatically produced by `Estimation_real_data.R` during the workflow for **Table 2 and Table S8**.
+  - Results are automatically produced by `Estimation_real_data.R` as **Khat** during the workflow for **Table 2 and Table S8**.
 
 ---

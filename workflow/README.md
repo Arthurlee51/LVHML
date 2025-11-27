@@ -49,7 +49,7 @@ Follow these steps to generate the tables:
 
 - **Table 2 and Table S8**  
   - Run `Estimation_real_data.R` using all combinations of `ext` and `gamma_fix`.  
-  - Run `Recommendation_performance.R` on the `.RData` files from these runs for different number of recommendations (10,20,30 and 40). The relevant output is stored in **sen_result**.
+  - Run `Recommendation_performance.R` on the `.RData` files from these runs for different number of recommendations (10,20,30 and 40). The relevant output is stored in **Sen_result**.
 
 - **Table S9**  
   - Results are automatically produced by `Estimation_real_data.R` during the workflow for **Table 2 and Table S8**.

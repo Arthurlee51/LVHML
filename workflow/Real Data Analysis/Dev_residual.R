@@ -65,16 +65,7 @@ for (gamma_fix in gamma_vals) {
       
       Last = 24*4
       #Load data
-      if(!ext){
-        if(!gamma_fix){
-          load(sprintf( "FCJ_fixg%dext%dJ%dN%dTp%d.Rdata",gamma_fix*1,ext*1,J,N,Tp ) )
-        }else{
-          load(sprintf(   "FCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
-        }
-        
-      }else{
-        load(sprintf(   "FCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
-      }
+      load(sprintf( "FCJ_fixg%dext%dJ%dN%dTp%d.Rdata",gamma_fix*1,ext*1,J,N,Tp ) )
       
       px = ncol(X)
       Z = array(0, dim=c(0,0,0))

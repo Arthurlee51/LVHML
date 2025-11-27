@@ -67,13 +67,13 @@ for (gamma_fix in gamma_vals) {
       #Load data
       if(!ext){
         if(!gamma_fix){
-          load(sprintf(   "~/Library/CloudStorage/OneDrive-LondonSchoolofEconomics/codes/MTDRC/Code/Discrete survival/v12/Data analysis/FCJ_fixg%dext%dJ%dN%dTp%d.Rdata",gamma_fix*1,ext*1,J,N,Tp ) )
+          load(sprintf( "FCJ_fixg%dext%dJ%dN%dTp%d.Rdata",gamma_fix*1,ext*1,J,N,Tp ) )
         }else{
-          load(sprintf(   "~/Library/CloudStorage/OneDrive-LondonSchoolofEconomics/codes/MTDRC/Code/Discrete survival/v12/Data analysis/FCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
+          load(sprintf(   "FCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
         }
         
       }else{
-        load(sprintf(   "~/Library/CloudStorage/OneDrive-LondonSchoolofEconomics/codes/MTDRC/Code/Discrete survival/v12/Data analysis/altICFCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
+        load(sprintf(   "FCJ_fixg%dext%dJ%dN%dTp%d_FULL%s.Rdata",gamma_fix*1,ext*1,J,N,Tp,demo ) )
       }
       
       px = ncol(X)

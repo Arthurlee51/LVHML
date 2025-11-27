@@ -19,7 +19,7 @@ The simulation results can be generated using the scripts in the `Simulation` fo
   - Run `test_constraint_parameter.R`. In the saved output object (out), the table values **Loss**, **Bloss** and **MMSE** correspond to **TotalLoss**, **Bloss** and   **MMSE**.
   - 
 - **Table S3**  
-  - Run `computational_time.R`.
+  - Run `computational_time.R`. The computational times are saved in the object **sim_time**
 
 - **Table S4**  
   - Run `main_proposed.R` with `ext = FALSE`, `gamma_fix = FALSE`, and `gap = TRUE`.  

@@ -16,8 +16,8 @@ The simulation results can be generated using the scripts in the `Simulation` fo
   - For the **LR** and **LRRI** results, run `main_LRandLRRI.R`.
 
 - **Table S2**  
-  - Run `test_constraint_parameter.R`. The values **Loss**, **Bloss**, and **MMSE** in the table are stored as **TotalLoss**, **Bloss**, and **MMSE** in the **out**.
-
+  - Run `test_constraint_parameter.R`. In the saved output object (out), the table values **Loss**, **Bloss** and **MMSE** correspond to **TotalLoss**, **Bloss** and   **MMSE**.
+  - 
 - **Table S3**  
   - Run `computational_time.R`.
 

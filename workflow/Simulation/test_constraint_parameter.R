@@ -123,6 +123,17 @@ for (J in c(100,200,300,400)) {
   mean_totalloss[proj_count] <- mean(Totalloss)
   avg_projstore[proj_count] <- avg_proj 
   
+  #Compute Bloss and MMSE
+  g_len <- if(!gamma_fix) Tp else 1
+  Beta_range <- (g_len+1):(g_len+px)
+  Betastar<- Ustar[,Beta_range]
+  Betahatstore <- Uhatstore[,Beta_range,] 
+  Bloss = rep(0, nsim)
+  Bloss <- sapply(1:nsim, function(z) Fnormsum.func(Betahatstore[,,z] , Betastar) )/sqrt(J)
+  
+  Difference =Betahatstore - array(Betastar, dim = c(J,px,nsim))
+  MSE = apply(Difference^2,c(1,2), mean  )
+  MMSE = max(MSE)
   # Prepare output list with all relevant information
   out[[paste("proj_const",proj_const, sep="")]] = list(
     "N" = N, 
@@ -145,6 +156,8 @@ for (J in c(100,200,300,400)) {
     "Totallossfull" = Totallossfull,
     "Thetaloss" = Thetaloss,
     "Uloss" = Uloss, 
+    "Bloss"= Bloss,
+    "MMSE" = MMSE,
     "n.cores" = n.cores, 
     "nsim" = nsim,
     "Kstar" = Kstar,

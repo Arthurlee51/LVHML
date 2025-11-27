@@ -45,7 +45,7 @@ Follow these steps to generate the tables:
 
 - **Tables S6 and S7**  
   - Run `Estimation_real_data.R` with `ext = FALSE` and `gamma_fix = FALSE`.  
-  - Then run `Inference_outcome.R` using the generated `.RData` files.
+  - Then run `Inference_outcome.R` using the generated `.RData` files. The outputs for Tables S6 and S7 are stored in **product_data_size** and **product_data_income**, respectively.
 
 - **Table 2**  
   - Run `Estimation_real_data.R` using all combinations of `ext` and `gamma_fix`.  

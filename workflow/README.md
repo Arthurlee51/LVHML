@@ -23,7 +23,7 @@ The simulation results can be generated using the scripts in the `Simulation` fo
 
 - **Table S4**  
   - Run `main_proposed.R` with `ext = FALSE`, `gamma_fix = FALSE`, and `gap = TRUE`.  
-  - Then run `proposed_LatentFDRandVariance.R` using the `.RData` files from `main_proposed.R`.
+  - Then run `proposed_LatentFDRandVariance.R` using the `.RData` files from `main_proposed.R`. The relevant outputs are saved in the resulting .RData file.
 
 - **Table S5**  
   - Run `main_proposed.R` with the following settings:  

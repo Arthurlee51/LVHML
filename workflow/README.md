@@ -47,11 +47,11 @@ Follow these steps to generate the tables:
   - Run `Estimation_real_data.R` with `ext = FALSE` and `gamma_fix = FALSE`.  
   - Then run `Inference_outcome.R` using the generated `.RData` files. The outputs for Tables S6 and S7 are stored in **product_data_size** and **product_data_income**, respectively.
 
-- **Table 2**  
+- **Table 2 and Table S8**  
   - Run `Estimation_real_data.R` using all combinations of `ext` and `gamma_fix`.  
   - Run `Recommendation_performance.R` on the `.RData` files from these runs for different number of recommendations (10,20,30 and 40). 
 
-- **Table S8**  
-  - Results are automatically produced by `Estimation_real_data.R` during the workflow for **Table 2**.
+- **Table S9**  
+  - Results are automatically produced by `Estimation_real_data.R` during the workflow for **Table 2 and Table S8**.
 
 ---

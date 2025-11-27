@@ -38,7 +38,7 @@ The simulation results can be generated using the scripts in the `Simulation` fo
 
 The real data analysis can be reproduced using the scripts in the `Real Data Analysis` folder.  
 
-To successfully run these codes, you will need to **download the raw data yourself** and place it in a subfolder named `Complete journey`.  
+To successfully run these codes, you will need to **download the raw data** and place it in a subfolder named `Complete journey`.  
 The raw dataset is available from [Dunnhumby](https://www.dunnhumby.com/source-files).
 
 Follow these steps to generate the tables:

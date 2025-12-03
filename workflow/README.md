@@ -56,7 +56,7 @@ Follow these steps to generate the tables:
 
 
 - **Figures 1** and **Table S9**   
-  - Run 'Dev_residual.R' after the workflow for **Table 2 and Table S8** is done. The in-sample and out-of-sample deviance residuals are stored in **tab_in** and **tab_out**, respectively.
+  - Run 'Dev_residual.R' after the workflow for **Table 2 and Table S10** is done. The in-sample and out-of-sample deviance residuals are stored in **tab_in** and **tab_out**, respectively.
 
 
 ---

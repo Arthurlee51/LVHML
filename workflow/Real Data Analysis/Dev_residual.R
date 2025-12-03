@@ -281,7 +281,7 @@ dev_table_all
 # 8. Line plot – deviance over time
 ############################
 
-ggplot(
+line_plot <- ggplot(
   dev_time_df,
   aes(x = time, y = dev_total, color = model, group = model)
 ) +

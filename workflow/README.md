@@ -47,15 +47,16 @@ Follow these steps to generate the tables:
   - Run `Estimation_real_data.R` with `ext = FALSE` and `gamma_fix = FALSE`.  
   - Then run `Inference_outcome.R` using the generated `.RData` files. The outputs for Tables S6 and S7 are stored in **product_data_size** and **product_data_income**, respectively.
 
-- **Table 2 and Table S8**  
+- **Table 2 and Table S10**  
   - Run `Estimation_real_data.R` using all combinations of `ext` and `gamma_fix`.  
   - Run `Recommendation_performance.R` on the `.RData` files from these runs for different number of recommendations (10,20,30 and 40). The relevant output is stored in **Sen_result**.
 
-- **Table S9**  
+- **Table S8**  
+  - Results are automatically produced by `Estimation_real_data.R` as **Khat** during the workflow for **Table 2 and Table S8**.
+
+
+- **Figures 1** and **Table S9**   
   - Run 'Dev_residual.R' after the workflow for **Table 2 and Table S8** is done. The in-sample and out-of-sample deviance residuals are stored in **tab_in** and **tab_out**, respectively.
 
-
-- **Table S10**  
-  - Results are automatically produced by `Estimation_real_data.R` as **Khat** during the workflow for **Table 2 and Table S8**.
 
 ---
